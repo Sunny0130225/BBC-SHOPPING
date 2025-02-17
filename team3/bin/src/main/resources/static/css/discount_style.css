@@ -1,0 +1,157 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+form {
+    margin: 20px auto;
+    width: 300px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+.deldtd-form {
+    display: inline; /* 使表單顯示為行內元素 */
+    margin: 0; /* 移除表單的外間距 */
+    padding: 0; /* 移除表單的內間距 */
+    width: 100%;
+    background-color: white;
+    padding: 0px;
+    border-radius: 0px;
+    box-shadow: 0 0px 0px white;
+}
+.other-form {
+    display: inline; /* 使表單顯示為行內元素 */
+    margin: 0; /* 移除表單的外間距 */
+    padding: 0; /* 移除表單的內間距 */
+    width: 100%;
+    background-color:#f2f2f2;
+    padding: 0px;
+    border-radius: 0px;
+    box-shadow: 0 0px 0px #f2f2f2
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    width: 50%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #C48888;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 25%;
+    margin-top: 8px;
+}
+
+button:hover {
+   background-color: #804040;
+transform: scale(1.05);
+}
+
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+td {
+    background-color: #fff;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.edit-button {
+	
+    background-color: #C48888;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 68%;
+    margin-left: 0%;
+}
+
+.edit-button:hover {
+    background-color: #804040;
+}
+
+.delete-button {
+	
+    background-color: #C48888;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 30%;
+    margin-left: 0%;
+}
+
+.delete-button:hover {
+    background-color: #804040;
+}
+
+.back-button {
+    display: block;
+    width: 150px;
+    margin: 20px auto;
+    padding: 10px;
+    text-align: center;
+    background-color: #C48888;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.back-button:hover {
+    background-color: #804040;
+}
+.apple{
+	text-align: center;
+}
+footer {
+    background-color: #333;
+    color: #FFFFFF;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 20px;
+}

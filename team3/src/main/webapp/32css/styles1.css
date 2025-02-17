@@ -1,0 +1,690 @@
+@charset "UTF-8";
+
+body {
+  margin: 0;
+  font-family: 'Open Sans', sans-serif;
+  color: #333;
+  background-color: #f8f8f2;  /* 背景色更新 */
+}
+
+
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #D9B3B3;
+  padding: 1rem 2rem;
+}
+
+.navbar .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 50px;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #fff;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  width: 40px;
+  margin-right: 10px;
+}
+
+.logo span {
+  font-size: 20px;
+  color: white;
+}
+
+.header-icons img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.header-icons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+.header-icons ul {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+}
+
+.header-icons button:hover {
+  color: #d35400;
+}
+
+.search-input {
+  display: none;
+  padding: 5px;
+  font-size: 14px;
+  width: 200px;
+  margin-left: 10px;
+}
+
+.search-btn {
+  font-size: 40px;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+}
+
+.search-btn:focus {
+  outline: none;
+}
+
+.hero {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: #f8f8f2;
+}
+
+.hero h1 {
+  font-size: 2rem;
+}
+
+.content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 2rem;
+}
+
+.section-block {
+  background-color: #fff;
+  color: #333;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 300px;
+}
+
+.section-block h2 {
+  margin: 0 0 1rem;
+}
+
+.section-block ul {
+  list-style: none;
+  padding: 0;
+}
+
+.section-block li {
+  margin-bottom: 0.5rem;
+}
+
+.section-block img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.section-block .action-buttons {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+}
+
+.action-buttons button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.action-buttons button:hover {
+  color: #d35400;
+}
+
+.footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #D9B3B3;
+}
+
+.floating-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #C48888;
+  color: white;
+  padding: 15px;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 36px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.floating-btn:hover {
+  background-color: #804040;
+}
+
+.result-box {
+  display: none;
+  background-color: #4CAF50;
+  color: white;
+  width: 200px;
+  padding: 20px;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 30px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.custom-alert, .custom-confirm {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  z-index: 1000;
+}
+
+.custom-alert button, .custom-confirm button {
+  margin: 10px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #C48888;  /* 按钮颜色更新 */
+  color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.custom-alert button:hover, .custom-confirm button:hover {
+  background-color: #804040;  /* 按钮 hover 更新 */
+}
+
+#reviews {
+  display: flex;
+  flex-wrap: wrap; /* 允許貼文自動換行 */
+  gap: 20px;       /* 貼文之間的間距 */
+  justify-content: center; /* 貼文居中對齊 */
+  padding: 20px;
+  box-sizing: border-box;
+}
+.review-item {
+  flex: 1 1 calc(33.33% - 40px); /* 每行三個，減去間距 */
+  box-sizing: border-box;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  max-width: calc(33.33% - 40px);
+}
+.review-item .review-container {
+  display: flex;
+  flex-direction: column; /* 圖片和文字依然垂直排列 */
+  align-items: center;
+  padding: 10px;
+}
+
+
+.image-container {
+  margin-bottom: 10px; /* 圖片和文字之間的間距 */
+}
+
+.product-image {
+  width: 100%; /* 圖片寬度填滿貼文區塊 */
+  height: auto; /* 保持圖片比例 */
+  border-radius: 8px;
+}
+
+
+.text-container {
+  text-align: left;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.text-container h3 {
+  margin: 0 0 10px;
+}
+
+.text-container p {
+  margin: 5px 0;
+  white-space: pre-wrap; /* 支援文字內容保留換行 */
+}
+
+button {
+  margin-right: 10px;
+}
+
+
+.review-item {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  width: calc(33% - 20px);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.review-item h3 {
+  font-size: 1.2em;
+  margin-bottom: 8px;
+}
+
+.review-item p {
+  margin: 8px 0;
+}
+
+
+.review-item button {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.review-item button:hover {
+  background-color: #d32f2f;
+}
+
+.review-item .edit-button {
+  background-color: #7bcbe8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.review-item .edit-button:hover {
+  background-color: #6ba8c7; /* 調整為稍微深一點的顏色，作為 hover 效果 */
+}
+
+
+.pagination-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.pagination-container button {
+  background-color: #5d4037;
+  color: #f8f8f2;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.pagination-container button.active {
+  background-color: #d35400;
+  font-weight: bold;
+}
+
+.pagination-container button:hover {
+  background-color: #6d4c41;
+}
+
+.load-more-container {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.load-more-btn {
+  background-color: #C48888;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.load-more-btn:hover {
+  background-color: #804040;
+}
+
+
+
+
+/* 愛心按鈕的樣式 */
+.heart-button i {
+  font-size: 24px;
+  color: gray; /* 預設為灰色 */
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.heart-button.liked i {
+  color: red; /* 點擊後變紅色 */
+}
+
+
+/* 廣告欄位樣式 */
+    .ad-container {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      width: 250px;
+      height: 150px;
+      background-color: #f9f9f9;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+      z-index: 1000;
+    }
+    .ad-container img {
+      width: 100%;
+      height: auto;
+      margin-bottom: 10px;
+    }
+    .ad-container button {
+      padding: 8px 12px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .ad-container button:hover {
+      background-color: #0056b3;
+    }
+    img {
+    width: 100%;
+    height: auto;
+    object-fit: cover; /* 讓圖片保持比例並填滿框框 */
+    overflow: hidden; /* 防止超出框框 */
+	}
+	.image-container {
+    width: 250px; 
+    height: 150px; 
+    overflow: hidden;
+}
+
+/* 自動換行樣式 */
+  .review-container .text-container p {
+    word-wrap: break-word; /* 遇到長字時自動斷行 */
+    word-break: break-all; /* 適用於包含長單詞的情況 */
+    white-space: pre-wrap; /* 保留原文本中的換行符並允許換行 */
+  }
+
+.review-item .comment-btn {
+  background-color: #C48888;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  padding: 8px 12px;
+}
+
+/* 調整刪除按鈕和留言按鈕的間距 */
+.review-container button {
+  margin-right: 10px;  /* 讓按鈕之間有一點間隔 */
+}
+
+/* 讓留言按鈕距離刪除按鈕有更多的空間 */
+.comment-btn {
+  margin-top: 10px; /* 增加留言按鈕與上方元素的間距 */
+  
+}
+
+.text-container .comment-btn,
+.text-container .insert-btn,
+.text-container .edit-btn,
+.text-container .delete-btn {
+	background-color: #C48888;
+  padding: 5px 15px;
+  font-size: 14px;
+}
+
+/* 設定留言項目 */
+.comment-item {
+  position: relative; /* 使按鈕容器相對於留言項目定位 */
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  word-wrap: break-word; /* 強制單字換行 */
+}
+
+/* 按鈕容器 */
+.button-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+/* 編輯與刪除按鈕 */
+button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background-color: #007BFF;
+  color: white;
+  transform: scale(1.05);
+}
+
+.edit-btn {
+  background-color: #ffc107;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+}
+
+
+/* 滑鼠懸停效果 */
+.comment-item:hover {
+  transform: scale(1.02);
+}
+
+/* 設定留言標題區 */
+.comment-header {
+  text-align: left; /* 強制讓標題靠左 */
+  font-size: 14px;
+  color: #333;
+  display: flex;
+  flex-direction: column; /* 讓內部元素垂直排列 */
+  align-items: flex-start; /* 讓內容靠左對齊 */
+  gap: 8px; /* 控制內部元素的間距 */
+}
+
+/* 用戶ID的樣式 */
+.comment-header .user-id {
+  font-weight: bold;
+  text-align: left; /* 確保靠左對齊 */
+}
+
+
+
+/* 留言內容的 p 樣式 */
+.comment-header .comment-content p {
+  display: flex; /* 使用 Flex 排版，使內部元素水平排列 */
+  align-items: center; /* 垂直對齊 */
+  margin: 0; /* 移除多餘的外距 */
+  text-align: left; /* 確保文字靠左對齊 */
+  line-height: 1.5; /* 調整行距 */
+}
+
+/* 留言內容的強調文字和預覽內容樣式 */
+.comment-header .comment-content p strong {
+  margin-right: 8px; /* 增加右側間距，與預覽內容分開 */
+}
+
+.comment-header .content-preview {
+  margin: 0; /* 移除預設外距 */
+  white-space: nowrap; /* 防止過早換行 */
+  overflow: hidden; /* 超出部分隱藏 */
+  text-overflow: ellipsis; /* 超出部分以省略號表示 */
+  flex-grow: 1; /* 讓內容自動撐滿剩餘空間 */
+}
+
+/* 留言時間樣式 */
+.comment-header .comment-time {
+  margin-top: 8px;
+  text-align: left; /* 確保時間顯示靠左 */
+}
+
+/* 設定留言項目 */
+.comment-item {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  word-wrap: break-word; /* 強制單字換行 */
+  display: flex;
+  flex-direction: column; /* 設置為列方向，使標題與內容能夠垂直排列 */
+  align-items: flex-start; /* 讓所有內容向左對齊 */
+}
+
+/* 設定留言標題的樣式 */
+.comment-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px; /* 標題和內容之間的間距 */
+  text-align: left; /* 使標題靠左對齊 */
+}
+
+/* 設定留言內容的樣式 */
+.comment-content {
+  font-size: 16px;
+  color: #555;
+  text-align: left; /* 使內容文字靠左對齊 */
+  white-space: pre-wrap; /* 讓文字自動換行 */
+  word-wrap: break-word; /* 強制單字超過容器邊界時換行 */
+  line-height: 1.5; /* 調整行距 */
+  letter-spacing: 0.5px; /* 增加字間距 */
+  
+}
+
+/* 每行顯示 5 個字 */
+.comment-content span {
+  display: inline-block;
+ 
+  word-break: break-all; /* 強制每個字都能換行 */
+}
+
+/* 當內容超過時，縮小容器並保持對齊 */
+.comment-item {
+  display: flex; /* 設置為 flex 排版 */
+  flex-direction: column; /* 設置為列方向，使標題與內容垂直排列 */
+  align-items: flex-start; /* 讓所有內容靠左對齊 */
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  word-wrap: break-word; /* 強制單字換行 */
+}
+
+/* 設定「更多」文字連結樣式 */
+.more-link {
+  color: #007bff; /* 藍色文字 */
+  cursor: pointer;
+  text-decoration: underline; /* 加下劃線顯示為可點擊 */
+}
+
+.more-link:hover {
+  color: #0056b3; /* 滑鼠懸停時改變顏色 */
+}
+/* 按鈕容器 */
+.button-container {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+/* 按鈕樣式 */
+button {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background-color: #007BFF;
+  color: white;
+  transform: scale(1.05);
+}
+
+.edit-btn {
+  background-color: #ffc107;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+}
+
+/* 設定無留言時的樣式 */
+.no-comments-message {
+  color: #888;
+  font-style: italic;
+  text-align: center;
+}
+
+/* 顯示加載錯誤時的樣式 */
+.comments-container p {
+  font-size: 16px;
+  color: #333;
+  text-align: center;
+}

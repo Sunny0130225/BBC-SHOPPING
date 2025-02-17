@@ -1,0 +1,80 @@
+.pinkbtn {
+  display: inline-block;
+  background-color: #c48888 !important;
+  color: #ffffff !important;
+  font-size: 16px;
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 5px;
+  border: none;
+  text-align: center;
+}
+
+.pinkbtn:hover {
+  background-color: #804040 !important;
+  transform: scale(1.05);
+}
+.BBC-back {
+  text-align: left;
+}
+#table tbody tr:hover {
+  background-color: #ebd6d6;
+}
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f7fc;
+  font-size: 20px;
+  line-height: normal !important;
+  margin: 0;
+  padding: 0;
+}
+th {
+  background-color: #c48888;
+  color: #ffffff;
+  font-size: 20px;
+}
+td {
+  font-size: 16px;
+}
+
+/* 導航欄 */
+.box {
+  padding: 0;
+  margin: 0;
+  width: 100vw;
+  height: 50px;
+  background-color: #4f4f4f !important;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-evenly;
+}
+.botten {
+  flex: 1;
+  float: left;
+  display: block;
+  color: white !important;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 0px;
+  margin: 0;
+  text-decoration: none;
+  font-size: 20px;
+}
+.botten:hover {
+  background-color: #ddd;
+  color: black !important;
+}
+#function {
+  width: 100%;
+  height: 50px;
+  color: white;
+  background-color: #4f4f4f;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 13px;
+  line-height: 1;
+  margin: 0;
+  padding: 0;
+}

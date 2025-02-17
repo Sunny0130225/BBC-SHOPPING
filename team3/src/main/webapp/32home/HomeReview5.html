@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BBC討論區</title>
+  
+  <link rel="stylesheet" href="../32css/styles1.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- 引入 jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <header class="navbar">
+    <div class="header-container">
+      <div class="logo">
+        <a href="http://localhost:8081/32home/HomeReview5.html">
+          <img src="../32images/BBC.png" alt="BBC Logo">
+          <span>BBC討論區</span>
+        </a>
+      </div>
+      <nav></nav>
+      <div class="header-icons">
+        <input type="text" id="searchInput" class="search-input" placeholder="輸入關鍵字後按 Enter">
+        <button class="search-btn" onclick="toggleSearchBox()">🔍</button>
+
+        <img src="../32images/B13.jpg" alt="會員你好" title="尊榮會員">
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>歡迎來到BBC討論區</h1>
+      <p>分享您的時尚靈感，探索更多可能！</p>
+    </section>
+    <section id="reviews" class="content">
+      <!-- 所有貼文將在此動態生成 -->
+    </section>
+    <div id="loadMoreContainer" class="load-more-container">
+      <button id="loadMoreButton" class="load-more-btn">查看更多</button>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>© 2024 BBC. 版權所有。</p>
+  </footer>
+
+  <button class="floating-btn" onclick="openAddPage()">+</button>
+
+  <!-- 廣告欄位 -->
+  <div class="ad-container">
+  <a href="http://localhost:5173/customer/discount" target="_blank">
+  <div class="image-container">
+    <img src="../32images/AD.jpg" alt="廣告圖片">
+  </div>
+  </a>
+</div>
+
+
+
+
+  <script>
+  
+  function toggleSearchBox() {
+      const searchInput = document.getElementById('searchInput');
+      searchInput.style.display = searchInput.style.display === 'none' ? 'block' : 'none';
+    }
+  
+  
+  
+  function openAddPage() {
+	  Swal.fire({
+	    title: '新增貼文',
+	    html: `
+	      <form id="InsertReviewForm" style="display: flex; flex-direction: column; gap: 16px;">
+	        <div style="margin-bottom: 16px;">
+	          <label for="userId">使用者 ID:</label>
+	          <input type="text" id="userId" name="userId" required>
+	        </div>
+	        <div style="margin-bottom: 16px;">
+	          <label for="product">貼文名稱:</label>
+	          <input type="text" id="product" name="product" required>
+	        </div>
+	        <div style="margin-bottom: 16px;">
+	          <label for="product_id">貼文編碼:</label>
+	          <input type="text" id="product_id" name="product_id" required>
+	        </div>
+	        <div style="margin-bottom: 16px;">
+	          <label for="productPicture">上傳圖片:</label>
+	          <input type="file" id="productPicture" name="productPicture" accept="image/*">
+	        </div>        
+	        <div style="margin-bottom: 16px;">
+	          <label for="content">內容:</label>
+	          <textarea id="content" name="content" style="width: 100%; resize: vertical;" rows="5" required></textarea>
+	        </div>
+	        <div style="margin-bottom: 16px;">
+	          <label for="rating">推薦星星:</label>
+	          <div id="ratingStars">
+	            <i class="fa fa-star" onclick="setRating(1)"></i>
+	            <i class="fa fa-star" onclick="setRating(2)"></i>
+	            <i class="fa fa-star" onclick="setRating(3)"></i>
+	            <i class="fa fa-star" onclick="setRating(4)"></i>
+	            <i class="fa fa-star" onclick="setRating(5)"></i>
+	          </div>
+	          <input type="hidden" id="rating" name="rating" required>
+	        </div>
+	        <div style="margin-bottom: 16px;">
+	          <label for="status">發表貼文帳號狀態:</label>
+	          <select id="status" name="status" required>
+	            <option value="active">帳號正常使用中</option>
+	            <option value="deleted">帳號已刪除</option>
+	            <option value="flagged">帳號異常</option>
+	          </select>
+	        </div>
+	        
+	        </form>
+	        `,
+	        showCancelButton: true,
+	        confirmButtonText: '確認送出',
+	        cancelButtonText: '取消',
+	        preConfirm: () => {
+	          const form = document.getElementById('InsertReviewForm');
+	          if (!form.checkValidity()) {
+	            Swal.showValidationMessage('請填寫所有必填欄位');
+	            return false;
+	          }
+	          const formData = new FormData(form);
+	          const productPicture = form.productPicture.files[0];
+	          if (productPicture) {
+	            formData.append('productPicture', productPicture);
+	          }
+	          return formData;
+	        },
+	      }).then((result) => {
+	        if (result.isConfirmed) {
+	          submitReview(result.value);
+	        }
+	      });
+	    }
+
+
+  function submitReview() {
+	  const form = document.getElementById('InsertReviewForm');
+	  const formData = new FormData();
+
+	  formData.append('review', JSON.stringify({
+	    userId: form.userId.value,
+	    product: form.product.value,
+	    productId: form.product_id.value,
+	    content: form.content.value,
+	    rating: form.rating.value,
+	    status: form.status.value,
+	  }));
+
+	  const productPicture = form.productPicture.files[0];
+	  if (productPicture) {
+	    formData.append('productPicture', productPicture);
+	  }
+
+	  fetch('http://localhost:8081/review/insert', {
+	    method: 'POST',
+	    body: formData,
+	  })
+	    .then(response => response.json())
+	    .then(data => {
+	      if (data.success) {
+	        Swal.fire('成功', '貼文新增成功', 'success').then(() => {
+	          window.location.href = 'http://localhost:8081/32home/HomeReview5.html';
+	        });
+	      } else {
+	        Swal.fire('錯誤', data.message || '新增失敗', 'error');
+	      }
+	    })
+	    .catch(() => Swal.fire('錯誤', '請求失敗', 'error'));
+	}
+ 
+    
+    //新增功能的讓星星顯示互動：
+    function setRating(value) {
+    	  const stars = document.querySelectorAll('#ratingStars .fa-star');
+    	  stars.forEach((star, index) => {
+    	    star.style.color = index < value ? 'gold' : 'gray';
+    	  });
+    	  document.getElementById('rating').value = value;
+    	}
+
+
+    
+    
+    
+ // 動態生成評價區塊
+ function addReview(review) {
+  const reviewsContainer = document.getElementById("reviews");
+  const reviewBlock = document.createElement("div");
+  reviewBlock.className = "review-item section-block";
+
+  // 星星
+  const stars = Array(5).fill('<i class="fa fa-star" style="color: gray;"></i>');
+  for (let i = 0; i < review.rating; i++) {
+    stars[i] = '<i class="fa fa-star" style="color: gold;"></i>';
+  }
+
+  // 處理產品圖片
+  const productImage = review.productPicture
+    ? `<img src="data:image/jpeg;base64,${review.productPicture}" alt="Product Image" class="product-image">`
+    : '<p>沒有圖片</p>';
+    
+    
+    
+
+  // 取得愛心點擊的總次數，若尚未設定則初始化為 0
+  let likeCount = parseInt(localStorage.getItem(`likeCount-${review.productId}`)) || 0;
+
+//截取前20個字作為預覽內容，並添加 "更多" 按鈕
+  const shortContent = review.content.length > 20 ? review.content.slice(0, 20) + '...' : review.content;
+  const fullContent = review.content; // 完整內容
+  
+//動態生成 HTML
+  reviewBlock.innerHTML = `
+    <div class="review-container">
+      <div class="image-container">
+        ${productImage}
+      </div>
+      <div class="text-container">
+        <h3>${review.product}</h3>
+        <p><strong>貼文內容:</strong><br>
+        <span class="content-preview">${shortContent}</span>
+        <span class="full-content" style="display:none;">${fullContent}</span>
+        <span class="more-link" style="display:${review.content.length > 20 ? 'inline' : 'none'};">載入更多...</span>
+      </p>
+        <p><strong>推薦星星:</strong> ${stars.join(' ')}</p>
+        <p><strong>發表貼文帳號狀態:</strong> ${getStatusText(review.status)}</p>
+        <p><strong>建立時間:</strong> ${new Date(review.createdAt).toLocaleString()}</p>
+        <p><strong>最新更新時間:</strong> ${new Date(review.updatedAt).toLocaleString()}</p>
+        <button onclick="confirmDelete(${review.userId}, ${review.productId})"><i class="fas fa-trash"></i> 刪除貼文</button>
+        <button class="edit-button" onclick="editReview(${review.id})"><i class="fas fa-edit"></i> 編輯貼文</button>
+        
+        <!-- 愛心按鈕 -->
+        <span class="heart-button" onclick="toggleHeart(this, ${review.productId})">
+          <i class="fas fa-heart"></i> 
+          <span class="like-count">${likeCount}</span>
+          <span class="float-text" style="display: none;">喜歡</span> <!-- 浮現文字 -->
+        </span>
+
+      
+        
+        <div>
+        <!-- 新增留言按鈕 -->
+        <button class="comment-btn" onclick="toggleComments(${review.id})">
+          <i class="fa fa-comment" aria-hidden="true"></i>
+        </button>
+        <!-- 新增留言按鈕 -->
+        <button class="insert-btn" data-review-id="${review.id}">新增留言</button>
+        
+        <div style="margin-bottom: 16px;">
+        </div>
+        <!-- 留言區域 (隱藏，點擊留言按鈕後顯示) -->
+        <div id="comments-${review.id}" class="comments-container" style="display: none;">
+          <!-- 留言會在這裡動態生成 -->
+        </div>
+        
+        
+      </div>
+    </div>
+  </div>
+`;                
+  
+  
+  
+  // 監聽貼文的「更多」文字連結點擊事件
+const moreLink = reviewBlock.querySelector('.more-link');
+moreLink?.addEventListener('click', () => {
+  const preview = reviewBlock.querySelector('.content-preview');
+  const full = reviewBlock.querySelector('.full-content');
+  const link = reviewBlock.querySelector('.more-link');
+
+  if (preview.style.display === 'none') {
+    preview.style.display = 'inline';
+    full.style.display = 'none';
+    link.textContent = '載入更多...';
+  } else {
+    preview.style.display = 'none';
+    full.style.display = 'inline';
+    link.textContent = '收起...';
+  }
+});
+  
+  // 檢查 localStorage 是否有記錄這個 productId 被點選過
+  if (localStorage.getItem(`liked-${review.productId}`) === 'true') {
+    const heartButton = reviewBlock.querySelector('.heart-button');
+    heartButton.classList.add('liked'); // 設定已點擊
+  }
+
+  reviewsContainer.appendChild(reviewBlock);
+}
+ 
+ 
+ 
+ 
+		//切換愛心顏色並儲存狀態
+ 		function toggleHeart(button, productId) {
+   		// 切換 .liked 類別
+   		button.classList.toggle("liked");
+
+   		// 更新 localStorage 狀態
+   		const isLiked = button.classList.contains("liked");
+   		localStorage.setItem(`liked-${productId}`, isLiked);
+
+   		// 讀取並更新愛心按鈕旁的按讚次數
+   		let likeCount = parseInt(localStorage.getItem(`likeCount-${productId}`)) || 0;
+
+   		// 若點擊愛心，則增加計數；若取消點擊愛心，則減少計數
+   		likeCount = isLiked ? likeCount + 1 : likeCount - 1;
+
+   		// 儲存更新後的按讚次數
+   		localStorage.setItem(`likeCount-${productId}`, likeCount);
+
+   		// 更新顯示的按讚次數
+   		const likeCountElement = button.querySelector('.like-count');
+   		likeCountElement.textContent = likeCount; // 顯示最新的按讚數
+
+   	// 顯示浮現文字
+   	  const floatText = button.querySelector('.float-text');
+   	  floatText.style.display = "inline"; // 顯示文字
+   	  floatText.classList.add("float-up"); // 加入動畫效果
+
+   	  // 移除動畫與隱藏文字
+   	  setTimeout(() => {
+   	    floatText.classList.remove("float-up");
+   	    floatText.style.display = "none";
+   	  }, 1000); // 1秒後隱藏文字
+
+   	  console.log(`Product ID: ${productId} - Like Count: ${likeCount}`); // 可選的調試輸出
+   	}
+		
+		
+		
+		
+		// 根據 status 顯示對應的文字
+		function getStatusText(status) {
+  		switch (status) {
+    	case 'active':
+     	 return '帳號正常使用中';
+    	case 'deleted':
+     	 return '帳號已刪除';
+    	case 'flagged':
+     	 return '帳號異常';
+    	default:
+    	  return '未知狀態';
+ 	 }
+		}
+
+
+		// 全域變數用來追蹤留言是否已經加載過
+		let loadedComments = {};
+
+		function toggleComments(reviewId) {
+		  const commentsContainer = document.getElementById(`comments-${reviewId}`);
+		  
+		  // 如果留言區域是隱藏的，顯示並加載留言
+		  if (commentsContainer.style.display === 'none' || commentsContainer.style.display === '') {
+		    commentsContainer.style.display = 'block';
+		    
+		    // 如果留言尚未加載過，則加載留言
+		    if (!loadedComments[reviewId]) {
+		      loadComments(reviewId);
+		    }
+		  } else {
+		    commentsContainer.style.display = 'none';
+		  }
+		}
+
+		// 加載留言
+		function loadComments(reviewId) {
+		  fetch(`http://localhost:8081/reviewReply/repliesByReview/${reviewId}`)
+		    .then(response => response.json())
+		    .then(comments => {
+		      const commentsContainer = document.getElementById(`comments-${reviewId}`);
+
+		      // 如果回應中包含 message 且為 "此貼文尚無任何留言"，顯示此訊息
+		      if (comments && comments.length === 1 && comments[0].message) {
+		        commentsContainer.innerHTML = `<p>${comments[0].message}</p>`;
+		        return;
+		      }
+
+		      // 如果沒有留言，顯示「目前還沒有留言」
+		      if (!comments || comments.length === 0) {
+		        commentsContainer.innerHTML = '<p>目前還沒有留言</p>';
+		        return;
+		      }
+
+		      commentsContainer.innerHTML = ''; // 清空現有留言
+
+		      // 迭代留言並生成 HTML
+		      comments.forEach(comment => {
+		        const commentElement = document.createElement('div');
+		        commentElement.className = 'comment-item';
+
+		        const userId = comment.userId;
+		        const content = comment.content;
+		        const createdAt = new Date(comment.createdAt).toLocaleString(); // 格式化時間
+		        const updatedAt = comment.updatedAt ? new Date(comment.updatedAt).toLocaleString() : '無修改'; // 檢查是否有修改時間
+
+		        // 截取前10個字顯示，並添加"更多"文字連結
+		        const shortContent = content.length > 10 ? content.slice(0, 10) + '...' : content;
+		        const fullContent = content; // 完整內容
+
+		        commentElement.innerHTML = `
+		          <div class="comment-header">
+		            <span class="user-id"><strong>用戶ID:</strong> ${userId}</span>
+		            <div class="comment-content">
+		              <p><strong>留言內容:</strong> 
+		                <span class="content-preview">${shortContent}</span>
+		                <span class="full-content" style="display:none;">${fullContent}</span>
+		                <span class="more-link" style="display:${content.length > 10 ? 'inline' : 'none'}">更多</span>
+		              </p>
+		            </div>
+		            <div class="comment-time">
+		              <span><strong>建立時間:</strong> ${createdAt}</span>
+		              <div>
+		              <span><strong>最新修改時間:</strong> ${updatedAt}</span>
+		            </div>
+		          </div>
+
+		          <div class="button-container">
+		            <button class="edit-btn" data-id="${comment.id}">編輯</button>
+		            <button class="delete-btn" data-id="${comment.id}">刪除</button>
+		          </div>
+		        `;
+
+		        // 監聽「更多」文字連結點擊事件
+		        const moreLink = commentElement.querySelector('.more-link');
+		        moreLink.addEventListener('click', () => {
+		          const preview = commentElement.querySelector('.content-preview');
+		          const full = commentElement.querySelector('.full-content');
+		          const link = commentElement.querySelector('.more-link');
+		          if (preview.style.display === 'none') {
+		        	    // 如果當前是顯示完整內容，則切換回預覽模式
+		        	    preview.style.display = 'inline';
+		        	    full.style.display = 'none';
+		        	    link.textContent = '載入更多...';
+		        	  } else {
+		        	    // 如果當前是顯示預覽內容，則切換到完整模式
+		        	    preview.style.display = 'none';
+		        	    full.style.display = 'inline';
+		        	    link.textContent = '收起...';
+		        	  }
+		         
+		        });
+
+		        // 把留言加入容器
+		        commentsContainer.appendChild(commentElement);
+		      });
+		    
+		      // 標記留言已加載
+		      loadedComments[reviewId] = true;
+		    })
+		    .catch(error => {
+		      console.error('加載留言時出錯:', error);
+		      const commentsContainer = document.getElementById(`comments-${reviewId}`);
+		      commentsContainer.innerHTML = '<p>加載留言失敗，請稍後再試。</p>'; // 顯示錯誤訊息
+		    });
+		}
+		
+		
+		
+		
+		
+	       // 新增留言
+	        $(document).on('click', '.insert-btn', function () {
+    const reviewId = $(this).data('review-id'); // 從按鈕的 data 屬性獲取對應的 reviewId
+
+    Swal.fire({
+        title: '新增留言',
+        html: `
+            <form id="replyForm" style="display: flex; flex-direction: column; gap: 16px;">
+                <label for="reviewId">對應貼文ID:</label>
+                <input type="text" id="reviewId" name="reviewId" value="${reviewId}" readonly required>
+                
+                <label for="userId">留言用戶ID:</label>
+                <input type="text" id="userId" name="userId" required>
+                
+                <label for="content">留言內容:</label>
+                <textarea id="content" name="content" required></textarea>
+            </form>
+        `,
+        showCancelButton: true,
+        confirmButtonText: '確認新增',
+        cancelButtonText: '取消',
+        preConfirm: () => {
+            const form = document.getElementById('replyForm');
+            if (!form.checkValidity()) {
+                Swal.showValidationMessage('請填寫所有欄位！');
+                return false;
+            }
+            const data = {
+                reviewId: form.reviewId.value,
+                userId: form.userId.value,
+                content: form.content.value
+            };
+            return data;
+        }
+    }).then(result => {
+        if (result.isConfirmed) {
+            fetch('/reviewReply/insert?reviewId=' + result.value.reviewId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(result.value)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('成功', '新增回覆成功', 'success').then(() => {
+                        // 延遲兩秒後刷新頁面
+                        setTimeout(() => {
+                            window.location.reload(); // 刷新頁面
+                        }, 2000); // 延遲兩秒
+                    });
+                } else {
+                    Swal.fire('錯誤', data.message || '新增失敗', 'error');
+                }
+            })
+            .catch(err => {
+                Swal.fire('錯誤', '發生未知錯誤', 'error');
+            });
+        }
+    });
+});
+	    	  
+	         
+	    	 
+	     // 編輯留言
+	        $(document).on('click', '.edit-btn', function () {
+	          const id = $(this).data('id');
+	          fetch(`/reviewReply/${id}`)
+	            .then(res => res.json())
+	            .then(data => {
+	              // 確保資料中有 content，並從返回的資料中獲取 userId 和 reviewId
+	              const content = data.content || "這是預設的留言內容，請修改。";
+	              const userId = data.userId;  // 從返回的資料中獲取 userId
+	              const reviewId = data.reviewId || null;  // 確保獲得 reviewId
+
+	              Swal.fire({
+	                title: '編輯留言',
+	                html: `
+	                  <form id="editReplyForm" style="display: flex; flex-direction: column; gap: 16px;">
+	                    <label for="content">留言內容:</label>
+	                    <textarea id="content" name="content" required>${content}</textarea>
+	                  </form>
+	                `,
+	                showCancelButton: true,
+	                confirmButtonText: '確認修改',
+	                cancelButtonText: '取消',
+	                preConfirm: () => {
+	                  const form = document.getElementById('editReplyForm');
+	                  const content = form.content.value;
+	                  if (!content) {
+	                    Swal.fire('錯誤', '留言內容不可為空', 'error');
+	                    return false;
+	                  }
+	                  // 返回所需的資料：content、userId、reviewId
+	                  return { content, userId, reviewId };
+	                }
+	              }).then(result => {
+	                if (result.isConfirmed) {
+	                  // 使用 result.value 來取得資料
+	                  const form = document.getElementById('editReplyForm');
+	                  const content = form.content.value;
+	                  
+	                  // 發送 PUT 請求，將 userId 和 reviewId 包含在內
+	                  fetch(`/reviewReply/${id}`, {
+	                    method: 'PUT',
+	                    headers: { 'Content-Type': 'application/json' },
+	                    body: JSON.stringify({
+	                      content: content,
+	                      userId: result.value.userId,  // 使用動態獲得的 userId
+	                      reviewId: result.value.reviewId  // 使用動態獲得的 reviewId
+	                    })
+	                  })
+	                  .then(res => res.json())
+	                  .then(data => {
+	                    if (data.status === "success") {
+	                      Swal.fire('成功', '留言修改成功', 'success').then(() => {
+	                        // 延遲兩秒後刷新頁面
+	                        setTimeout(() => {
+	                          window.location.reload(); // 刷新頁面
+	                        }, 2000); // 延遲兩秒
+	                      });
+	                    } else {
+	                      Swal.fire('錯誤', data.message || '修改失敗', 'error');
+	                    }
+	                  })
+	                  .catch(error => {
+	                    Swal.fire('錯誤', '請求發生錯誤', 'error');
+	                  });
+	                }
+	              });
+	            })
+	            .catch(error => {
+	              console.error('API 錯誤:', error);
+	              Swal.fire('錯誤', '無法取得留言資料，請稍後再試', 'error');
+	            });
+	        });
+	     
+	     
+	     
+	     // 刪除留言
+	        $(document).on('click', '.delete-btn', function () {
+	          const replyId = $(this).data('id'); // 從 data-id 中讀取 replyId
+	          Swal.fire({
+	            title: '確定刪除這條留言嗎?',
+	            text: "刪除後將無法恢復",
+	            icon: 'warning',
+	            showCancelButton: true,
+	            confirmButtonText: '確定刪除',
+	            cancelButtonText: '取消'
+	          }).then(result => {
+	            if (result.isConfirmed) {
+	              // 使用您指定的路徑來發送 DELETE 請求
+	              fetch(`/reviewReply/delete?replyId=${replyId}`, { method: 'DELETE' })
+	                .then(res => res.json())
+	                .then(data => {
+	                  if (data.success) {  // 確認成功標誌，根據後端的響應調整
+	                    Swal.fire('成功', '留言刪除成功', 'success').then(() => {
+	                      setTimeout(() => {
+	                        // 刷新頁面或更新 DataTable
+	                        window.location.reload(); // 刷新頁面
+	                        // 如果使用 DataTable，可以用這行來更新資料：
+	                        // $('#reviewRepliesTable').DataTable().ajax.reload();
+	                      }, 2000);
+	                    });
+	                  } else {
+	                    Swal.fire('錯誤', data.message || '刪除失敗', 'error');
+	                  }
+	                })
+	                .catch(error => {
+	                  Swal.fire('錯誤', '刪除失敗，請稍後再試', 'error');
+	                });
+	            }
+	          });
+	        });
+		
+		
+		
+		
+		
+		
+		
+		
+		
+    // 編輯功能
+	async function editReview(reviewId) {
+    try {
+        // 獲取現有的數據
+        const response = await fetch(`http://localhost:8081/review/integer/${reviewId}`);
+        if (!response.ok) {
+            throw new Error("無法獲取評價數據");
+        }
+        const review = await response.json();
+
+        // 使用 SweetAlert 顯示編輯表單
+        Swal.fire({
+            title: "編輯評價",
+            html: `
+            <form id="EditReviewForm" style="display: flex; flex-direction: column; gap: 16px;">
+                <div style="margin-bottom: 16px;">
+                    <label for="userId">使用者 ID:</label>
+                    <input type="text" id="userId" name="userId" value="${review.userId}" required>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <label for="product">貼文名稱:</label>
+                    <input type="text" id="product" name="product" value="${review.product}" required>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <label for="productId">貼文編碼:</label>
+                    <input type="text" id="productId" name="productId" value="${review.productId}" required>
+                </div>
+
+                <!-- 圖片上傳 -->
+                <div style="margin-bottom: 16px;">
+                    <label for="productPicture">上傳圖片:</label>
+                    <input type="file" id="productPicture" name="productPicture" accept="image/*" style="margin-bottom: 8px;">
+                    ${review.productPictureBase64 ? 
+                    `<img src="data:image/jpeg;base64,${review.productPictureBase64}" alt="Current Image" style="width: 120px; height: 120px; object-fit: cover; border: 1px solid #ccc; border-radius: 8px;">`
+                    : ''}
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <label for="content">內容:</label>
+                    <textarea id="content" name="content" style="width: 100%; resize: vertical;" rows="5" required></textarea>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <label for="rating">推薦星星:</label>
+                    <div id="ratingStars">
+                        ${Array(5).fill(0).map((_, i) => `
+                        <i class="fa fa-star" style="color: ${i < review.rating ? 'gold' : 'gray'};" onclick="setRating(${i + 1})"></i>
+                        `).join('')}
+                    </div>
+                    <input type="hidden" id="rating" name="rating" value="${review.rating}" required>
+                </div>
+
+                <div style="margin-bottom: 16px;">
+                    <label for="status">發表貼文帳號狀態:</label>
+                    <select id="status" name="status" required>
+                        <option value="active" ${review.status === 'active' ? 'selected' : ''}>帳號正常使用中</option>
+                        <option value="deleted" ${review.status === 'deleted' ? 'selected' : ''}>帳號已刪除</option>
+                    </select>
+                </div>
+            </form>
+            `,
+            showCancelButton: true,
+            confirmButtonText: "確認提交",
+            cancelButtonText:"取消",
+         // 確保圖片是 base64 字符串
+            preConfirm: () => {
+                const form = document.getElementById("EditReviewForm");
+                const formData = new FormData(form);
+
+                const productPictureInput = document.getElementById("productPicture");
+                if (productPictureInput.files.length > 0) {
+                    return new Promise((resolve, reject) => {
+                        const file = productPictureInput.files[0];
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                            formData.set("productPicture", reader.result.split(",")[1]); // 只取 Base64 部分
+                            resolve(formData);
+                        };
+                        reader.onerror = () => reject(new Error("圖片讀取失敗"));
+                        reader.readAsDataURL(file);
+                    });
+                } else {
+                    return Promise.resolve(formData);  // 沒有圖片時，直接提交表單
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const formData = Object.fromEntries(result.value);
+                fetch(`http://localhost:8081/review/${reviewId}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.status === "success") {
+                        Swal.fire("成功", "貼文更新成功！", "success").then(() => {
+                            setTimeout(() => {
+                                window.location.reload(); // 刷新頁面
+                            }, 2000); // 延遲兩秒
+                        });
+                    } else {
+                        Swal.fire("失敗", data.message || "貼文更新失敗", "error");
+                    }
+                })
+                .catch((error) => {
+                    Swal.fire("錯誤", error.message, "error");
+                });
+            }
+        });
+    } catch (error) {
+        Swal.fire("錯誤", error.message, "error");
+    }
+}
+ 
+
+// 處理評分星星點擊
+function setRating(rating) {
+  const stars = document.querySelectorAll("#ratingStars i");
+  stars.forEach((star, index) => {
+    star.style.color = index < rating ? "gold" : "gray";
+  });
+  document.getElementById("rating").value = rating;
+}
+
+
+
+    // 確認刪除評價
+    async function confirmDelete(userId, productId) {
+  const result = await Swal.fire({
+    title: '確定要刪除此貼文嗎？',
+    text: '刪除後將無法復原！',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: '確定刪除',
+    cancelButtonText: '取消'
+  });
+
+  if (result.isConfirmed) {
+    try {
+      const response = await fetch(`/review/delete?userId=${userId}&productId=${productId}`, {
+        method: 'DELETE',
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `deleteUserId=${encodeURIComponent(userId)}&deleteProductId=${encodeURIComponent(productId)}`,
+      });
+
+      if (response.ok) {
+        Swal.fire({
+          title: '刪除成功！',
+          text: '該貼文已被成功刪除。',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false
+        }).then(() => window.location.reload());
+      } else {
+        Swal.fire({
+          title: '刪除失敗！',
+          text: '請稍後再試。',
+          icon: 'error',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      }
+    } catch (error) {
+      console.error("刪除失敗：", error);
+      Swal.fire({
+        title: '系統錯誤！',
+        text: '請稍後再試。',
+        icon: 'error',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    }
+  }
+}
+    
+    
+
+
+    let currentIndex = 0; // 當前顯示的貼文索引
+    const itemsPerPage = 9; // 每次顯示的貼文數量
+
+    function displayMoreReviews() {
+      const reviewsContainer = document.getElementById("reviews");
+      const loadMoreButton = document.getElementById("loadMoreButton");
+
+
+      
+      // 獲取下一批貼文
+      const nextReviews = allReviews.slice(currentIndex, currentIndex + itemsPerPage);
+      nextReviews.forEach((review) => addReview(review));
+
+      currentIndex += itemsPerPage;
+
+      // 如果所有貼文已顯示，隱藏「查看更多」按鈕
+      if (currentIndex >= allReviews.length) {
+        loadMoreButton.style.display = "none";
+      }
+    }
+
+    // 從後端獲取所有貼文
+    let allReviews = [];
+    fetch("../review")
+      .then((response) => response.json())
+      .then((reviews) => {
+        allReviews = reviews;
+        displayMoreReviews(); // 初始顯示第一批貼文
+      })
+      .catch((error) => {
+        console.error("無法取得貼文資料：", error);
+      });
+
+    // 綁定「查看更多」按鈕事件
+    document.getElementById("loadMoreButton").addEventListener("click", displayMoreReviews);
+
+ // 控制搜尋框顯示/隱藏
+    function toggleSearchBox() {
+      const searchInput = document.getElementById("searchInput");
+      searchInput.style.display = searchInput.style.display === "none" ? "block" : "none";
+      searchInput.focus();
+    }
+
+    // 搜尋功能
+    function searchReviews() {
+      const searchInput = document.getElementById("searchInput").value.toLowerCase();
+      const reviewsContainer = document.getElementById("reviews");
+
+      // 清空原有顯示的貼文
+      reviewsContainer.innerHTML = "";
+      
+     
+
+
+      // 過濾符合條件的貼文
+      const filteredReviews = allReviews.filter((review) =>
+        review.product.toLowerCase().includes(searchInput) ||
+        review.userId.toString().includes(searchInput) ||
+        review.productId.toString().includes(searchInput) ||
+        review.content.toLowerCase().includes(searchInput)
+      );
+
+      if (filteredReviews.length === 0) {
+        reviewsContainer.innerHTML = `<p style="color: white;">找不到符合條件的結果。</p>`;
+      } else {
+        filteredReviews.forEach((review) => addReview(review));
+      }
+    }
+
+    // 綁定搜尋框按鍵事件（按下 Enter 觸發搜尋）
+    document.getElementById("searchInput").addEventListener("keypress", (event) => {
+      if (event.key === "Enter") {
+        searchReviews();
+      }
+    });
+
+   
+  </script>
+</body>
+</html>
